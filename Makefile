@@ -21,10 +21,11 @@ reformat:
 	echo "Reformatted code!"
 
 build: ./src/plugins/*
-	@ruff src && \
-	for file in $^ ; do \
+	@for file in $^ ; do \
 		pushd $${file}  > /dev/null; \
-		test -f setup.py && python setup.py bdist_egg --dist-dir=../../../plugins clean --all > /dev/null 2> /dev/null; \
+		test -f requirements.txt && PIP_TARGET=deps pip install -r requirements.txt; \
+		touch deps/__init__.py; \
+		test -f setup.py && python setup.py install bdist_egg --dist-dir=../../../plugins clean --all; \
 		popd  > /dev/null; \
 	done
 
